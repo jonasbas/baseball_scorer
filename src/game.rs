@@ -1,11 +1,11 @@
 use crate::base::Base;
-use crate::inning::InningTracker;
+use crate::inning::Inning;
 
 pub struct Gamestate {
     first_base: Base,
     second_base: Base,
     third_base: Base,
-    inning: InningTracker,
+    inning: Vec<Inning>,
 }
 
 impl Gamestate {
@@ -14,7 +14,7 @@ impl Gamestate {
             first_base: Base::new(),
             second_base: Base::new(),
             third_base: Base::new(),
-            inning: InningTracker::new(),
+            inning: Vec::new(),
         }
     }
 }
