@@ -2,10 +2,9 @@ use crate::player::Player;
 
 pub struct Team {
     name: String,
-    batting_order: Vec<Player>,
+    pub batting_order: Vec<Player>,
     substitutes: Vec<Player>,
     pitcher: Option<Player>,
-    current_batting_spot: u8,
 }
 
 impl Team {
@@ -15,8 +14,15 @@ impl Team {
             batting_order: Vec::new(),
             substitutes: Vec::new(),
             pitcher: None,
-            current_batting_spot: 1,
         }
+    }
+
+    pub fn add_full_batting_order(&mut self, players: Vec<Player>) -> Result<(), &str> {
+        if players.len() != 9 {
+            return Err("Too many players in line up!");
+        }
+        self.batting_order = players;
+        Ok(())
     }
 
     pub fn add_player_in_batting_order(&mut self, player: Player) {

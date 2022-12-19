@@ -18,9 +18,9 @@ pub struct AtBat {
 }
 
 impl AtBat {
-    pub fn new(player: Player) -> Self {
+    pub fn new(player: &Player) -> Self {
         AtBat {
-            player,
+            player: player.clone(),
             strikes: 0,
             balls: 0,
             outcome: None,

@@ -1,11 +1,11 @@
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Player {
     first_name: String,
     last_name: String,
     positon: Position,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Position {
     Catcher,
     FirstBase,
