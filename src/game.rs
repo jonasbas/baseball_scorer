@@ -56,6 +56,7 @@ impl Gamestate {
 
         let result = current_at_bat.play();
 
+        println!("{:?}", current_at_bat.outcome.unwrap());
         Ok(())
     }
 }

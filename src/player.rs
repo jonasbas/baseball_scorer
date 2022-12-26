@@ -27,6 +27,14 @@ impl Player {
             position,
         }
     }
+
+    pub fn get_sample_player() -> Player {
+        Player::new(
+            String::from("Timo"),
+            String::from("Werner"),
+            crate::player::Position::Catcher,
+        )
+    }
 }
 
 #[cfg(test)]
