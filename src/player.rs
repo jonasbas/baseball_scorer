@@ -2,7 +2,7 @@
 pub struct Player {
     first_name: String,
     last_name: String,
-    positon: Position,
+    position: Position,
 }
 
 #[derive(Debug, PartialEq, Clone, Copy)]
@@ -20,11 +20,11 @@ pub enum Position {
 }
 
 impl Player {
-    pub fn new(first_name: String, last_name: String, positon: Position) -> Self {
+    pub fn new(first_name: String, last_name: String, position: Position) -> Self {
         Player {
             first_name,
             last_name,
-            positon,
+            position,
         }
     }
 }
@@ -42,6 +42,9 @@ mod tests {
 
         assert_eq!(player.first_name, "Timo", "Player name should be Timo!");
         assert_eq!(player.last_name, "Werner", "Player name should be Werner!");
-        assert_eq!(player.positon, Catcher, "Player position should be Catcher");
+        assert_eq!(
+            player.position, Catcher,
+            "Player position should be Catcher"
+        );
     }
 }

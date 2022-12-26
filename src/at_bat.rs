@@ -1,6 +1,7 @@
 use crate::at_bat::Outcome::*;
 use crate::player::Player;
 
+#[derive(Debug, PartialEq, Eq)]
 enum Outcome {
     StrikeOut,
     Single,
@@ -75,5 +76,58 @@ impl AtBat {
             "home" | "homerun" | "4" | "h4" | "hr" => self.outcome = Some(HomeRun),
             _ => (),
         };
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn should_create_new() {
+        let player = get_sample_player();
+        let at_bat = AtBat::new(&player);
+
+        assert_eq!(at_bat.balls, 0);
+        assert_eq!(at_bat.strikes, 0);
+        assert_eq!(at_bat.outcome, None);
+    }
+    #[test]
+    fn should_score_strike() {
+        let player = get_sample_player();
+        let mut at_bat = AtBat::new(&player);
+        at_bat.score_strike();
+
+        assert_eq!(at_bat.strikes, 1);
+        at_bat.score_strike();
+
+        assert_eq!(at_bat.strikes, 2);
+        at_bat.score_strike();
+
+        assert_eq!(at_bat.strikes, 3);
+        assert_eq!(at_bat.outcome.unwrap(), StrikeOut);
+    }
+
+    #[test]
+    fn should_score_ball() {
+        let player = get_sample_player();
+        let mut at_bat = AtBat::new(&player);
+
+        at_bat.score_ball();
+        assert_eq!(at_bat.balls, 1);
+        at_bat.score_ball();
+        assert_eq!(at_bat.balls, 2);
+        at_bat.score_ball();
+        assert_eq!(at_bat.balls, 3);
+        at_bat.score_ball();
+        assert_eq!(at_bat.balls, 4);
+        assert_eq!(at_bat.outcome.unwrap(), Walk)
+    }
+
+    fn get_sample_player() -> Player {
+        Player::new(
+            String::from("Timo"),
+            String::from("Werner"),
+            crate::player::Position::Catcher,
+        )
     }
 }
