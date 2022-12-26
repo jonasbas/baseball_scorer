@@ -42,4 +42,38 @@ impl AtBat {
             self.outcome = Some(Walk);
         }
     }
+
+    pub fn is_over(&self) -> bool {
+        if self.outcome.is_some() {
+            return true;
+        }
+        false
+    }
+
+    pub fn play(&mut self) -> Result<(), &str> {
+        println!("Current Player: {:?}", self.player);
+
+        while !self.is_over() {
+            println!("Strikes: {}", self.strikes);
+            println!("Balls: {}", self.balls);
+            println!("");
+            println!("Awaiting input...");
+            let input: String = text_io::read!();
+            self.match_input(input)
+        }
+
+        Ok(())
+    }
+
+    fn match_input(&mut self, input: String) {
+        match input.trim().to_lowercase().as_str() {
+            "b" => self.score_ball(),
+            "s" | "k" => self.score_strike(),
+            "single" | "1" | "h1" | "hs" => self.outcome = Some(Single),
+            "double" | "2" | "h2" | "hd" | "d" => self.outcome = Some(Double),
+            "triple" | "3" | "h3" | "ht" | "t" => self.outcome = Some(Triple),
+            "home" | "homerun" | "4" | "h4" | "hr" => self.outcome = Some(HomeRun),
+            _ => (),
+        };
+    }
 }

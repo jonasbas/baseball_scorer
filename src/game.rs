@@ -1,10 +1,11 @@
+use crate::at_bat::AtBat;
 use crate::inning::Inning;
 use crate::score::Score;
 use crate::team::Team;
 
 pub struct Gamestate {
-    away: Option<(Team, u8)>,
-    home: Option<(Team, u8)>,
+    away: Option<Team>,
+    home: Option<Team>,
     innings: Vec<Inning>,
     current_inning: Option<Inning>,
     score: Score,
@@ -22,12 +23,12 @@ impl Gamestate {
     }
 
     pub fn set_home_team(&mut self, team: Team) -> Result<(), &str> {
-        self.home = Some((team, 0));
+        self.home = Some(team);
         Ok(())
     }
 
     pub fn set_away_team(&mut self, team: Team) -> Result<(), &str> {
-        self.away = Some((team, 0));
+        self.away = Some(team);
         Ok(())
     }
 
@@ -38,18 +39,23 @@ impl Gamestate {
         Ok(())
     }
 
-    // pub fn start_game(&mut self) -> Result<(), &str> {
-    //     if self.away.is_none() || self.home.is_none() {
-    //         return Err("both teams have to be set!");
-    //     }
-    //     self.new_inning()?;
-    //
-    //     let current_player = &self.away.unwrap().0.batting_order[0];
-    //     self.current_inning
-    //         .unwrap()
-    //         .top
-    //         .start_new_at_bat(current_player, &self.score);
-    //
-    //     Ok(())
-    // }
+    pub fn start_game(&mut self) -> Result<(), &str> {
+        if self.away.is_none() || self.home.is_none() {
+            return Err("both teams have to be set!");
+        }
+        if self.new_inning().is_err() {
+            return Err("");
+        }
+        let this_score = Score::new();
+
+        let current_player = self.away.as_ref().unwrap().batting_order.first().unwrap();
+
+        let current_inning = self.current_inning.as_ref().unwrap();
+
+        let mut current_at_bat = AtBat::new(&current_player);
+
+        let result = current_at_bat.play();
+
+        Ok(())
+    }
 }

@@ -5,7 +5,7 @@ pub struct Player {
     positon: Position,
 }
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Position {
     Catcher,
     FirstBase,

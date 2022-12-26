@@ -25,7 +25,7 @@ impl Team {
         Ok(())
     }
 
-    pub fn add_player_in_batting_order(&mut self, player: Player) {
-        self.batting_order.push(player);
+    pub fn add_player_in_batting_order(&mut self, player: &Player) {
+        self.batting_order.push(player.clone());
     }
 }
