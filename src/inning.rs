@@ -1,22 +1,42 @@
 use crate::{at_bat::AtBat, base::Base, player::Player, score::Score};
 
 pub struct Inning {
-    pub top: InningHalf,
-    pub bot: InningHalf,
-    is_top: bool,
+    top: Option<InningHalf>,
+    bot: Option<InningHalf>,
+    pub is_top: bool,
 }
 
+impl Inning {
+    pub fn new() -> Self {
+        Inning {
+            top: None,
+            bot: None,
+            is_top: true,
+        }
+    }
+
+    pub fn set_top(&mut self, half: InningHalf) {
+        self.top = Some(half);
+    }
+
+    pub fn set_bot(&mut self, half: InningHalf) {
+        self.bot = Some(half);
+    }
+}
+
+#[derive(Clone, Copy, PartialEq)]
 pub enum Half {
     Top,
     Bottom,
 }
 
+#[derive(Clone)]
 pub struct InningHalf {
     number: u8,
     half: Half,
     at_bats: Vec<AtBat>,
     bases: Vec<Base>,
-    outs: u8,
+    pub outs: u8,
 }
 
 impl InningHalf {
@@ -30,8 +50,8 @@ impl InningHalf {
         }
     }
 
-    fn is_over(&self) -> bool {
-        self.outs == 3
+    pub fn is_over(&self) -> bool {
+        self.outs >= 3
     }
 
     pub fn start_new_at_bat(&mut self, player: &Player, score: &Score) -> Result<(), &str> {
@@ -42,15 +62,5 @@ impl InningHalf {
         let current_at_bat = AtBat::new(player);
 
         Ok(())
-    }
-}
-
-impl Inning {
-    pub fn new(number: u8) -> Self {
-        Inning {
-            top: InningHalf::new(number, Half::Top),
-            bot: InningHalf::new(number, Half::Bottom),
-            is_top: true,
-        }
     }
 }

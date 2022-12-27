@@ -1,7 +1,7 @@
 use crate::at_bat::Outcome::*;
 use crate::player::Player;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub enum Outcome {
     StrikeOut,
     Single,
@@ -9,8 +9,11 @@ pub enum Outcome {
     Triple,
     HomeRun,
     Walk,
+    GroundOut,
+    FlyOut,
 }
 
+#[derive(Clone)]
 pub struct AtBat {
     player: Player,
     strikes: u8,
@@ -74,6 +77,8 @@ impl AtBat {
             "double" | "2" | "h2" | "hd" | "d" => self.outcome = Some(Double),
             "triple" | "3" | "h3" | "ht" | "t" => self.outcome = Some(Triple),
             "home" | "homerun" | "4" | "h4" | "hr" => self.outcome = Some(HomeRun),
+            "go" | "g" => self.outcome = Some(GroundOut),
+            "fo" | "f" => self.outcome = Some(FlyOut),
             _ => (),
         };
     }
@@ -82,6 +87,7 @@ impl AtBat {
 #[cfg(test)]
 mod test {
     use super::*;
+
     #[test]
     fn should_create_new() {
         let player = Player::get_sample_player();
@@ -91,6 +97,7 @@ mod test {
         assert_eq!(at_bat.strikes, 0);
         assert_eq!(at_bat.outcome, None);
     }
+
     #[test]
     fn should_score_strike() {
         let player = Player::get_sample_player();

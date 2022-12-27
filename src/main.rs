@@ -1,7 +1,5 @@
 use game::Gamestate;
-use player::Player;
 use team::Team;
-use text_io::read;
 
 mod at_bat;
 mod base;
@@ -12,11 +10,9 @@ mod score;
 mod team;
 
 fn main() {
-    let mut home_team = Team::new(String::from("Heimat"));
-    home_team.add_player_in_batting_order(&Player::get_sample_player());
+    let home_team = Team::create_team_with_players(team::Location::Home);
 
-    let mut away_team = Team::new(String::from("Weg"));
-    away_team.add_player_in_batting_order(&Player::get_sample_player());
+    let away_team = Team::create_team_with_players(team::Location::Away);
 
     let mut game = Gamestate::new();
     game.set_home_team(home_team);

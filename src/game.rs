@@ -1,13 +1,15 @@
-use crate::at_bat::AtBat;
-use crate::inning::Inning;
+use crate::at_bat::{AtBat, Outcome};
+use crate::inning::{Half, Inning, InningHalf};
 use crate::score::Score;
 use crate::team::Team;
 
 pub struct Gamestate {
     away: Option<Team>,
     home: Option<Team>,
+    home_order: usize,
+    away_order: usize,
     innings: Vec<Inning>,
-    current_inning: Option<Inning>,
+    current_inning: u8,
     score: Score,
 }
 
@@ -16,47 +18,76 @@ impl Gamestate {
         Gamestate {
             away: None,
             home: None,
+            home_order: 0,
+            away_order: 0,
             innings: Vec::new(),
-            current_inning: None,
+            current_inning: 1,
             score: Score::new(),
         }
     }
 
-    pub fn set_home_team(&mut self, team: Team) -> Result<(), &str> {
+    pub fn set_home_team(&mut self, team: Team) {
         self.home = Some(team);
-        Ok(())
     }
 
-    pub fn set_away_team(&mut self, team: Team) -> Result<(), &str> {
+    pub fn set_away_team(&mut self, team: Team) {
         self.away = Some(team);
-        Ok(())
     }
 
-    fn new_inning(&mut self) -> Result<(), &str> {
-        let new_inning_number: u8 = self.innings.len() as u8 + 1;
-        let tmp = Inning::new(new_inning_number);
-        self.current_inning = Some(tmp);
-        Ok(())
+    pub fn start_game(&mut self) {
+        self.game_loop();
     }
 
-    pub fn start_game(&mut self) -> Result<(), &str> {
-        if self.away.is_none() || self.home.is_none() {
-            return Err("both teams have to be set!");
+    fn game_loop(&mut self) {
+        let mut current_inning: Inning = Inning::new();
+        let mut is_top: bool = true;
+        let mut half_type: Half = Half::Top;
+
+        while !self.is_over(half_type) {
+            let mut half = InningHalf::new(self.current_inning, half_type);
+
+            while !half.is_over() {
+                let mut current_player =
+                    &self.away.as_ref().unwrap().batting_order[self.away_order];
+
+                if half_type == Half::Bottom {
+                    current_player = &self.home.as_ref().unwrap().batting_order[self.home_order];
+                    self.home_order = (self.home_order + 1) % 9;
+                } else {
+                    self.away_order = (self.away_order + 1) % 9;
+                }
+
+                let mut current_at_bat = AtBat::new(current_player);
+                let result = current_at_bat.play();
+
+                // if current_at_bat.outcome == Some(Outcome::GroundOut) {}
+
+                if current_at_bat.outcome.is_some() {
+                    half.outs += 1;
+                }
+            }
+
+            //Ende der Inning Hälfte
+            if is_top {
+                current_inning.set_top(half);
+                is_top = !is_top;
+                half_type = Half::Bottom;
+            } else {
+                current_inning.set_bot(half);
+                is_top = !is_top;
+                half_type = Half::Top;
+                self.current_inning += 1;
+            }
         }
-        if self.new_inning().is_err() {
-            return Err("");
+    }
+
+    fn is_over(&self, half: Half) -> bool {
+        if self.current_inning == 9 && half == Half::Top {
+            println!("Game over!");
+            true
+        } else {
+            false
         }
-        let this_score = Score::new();
-
-        let current_player = self.away.as_ref().unwrap().batting_order.first().unwrap();
-
-        let current_inning = self.current_inning.as_ref().unwrap();
-
-        let mut current_at_bat = AtBat::new(&current_player);
-
-        let result = current_at_bat.play();
-
-        println!("{:?}", current_at_bat.outcome.unwrap());
-        Ok(())
+        //TODO: checken ob Game vorbei ist
     }
 }
