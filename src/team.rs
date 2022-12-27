@@ -1,10 +1,12 @@
 use crate::player::Player;
 
+#[derive(Debug)]
 pub enum Location {
     Home,
     Away,
 }
 
+#[derive(Debug)]
 pub struct Team {
     name: String,
     pub batting_order: Vec<Player>,
@@ -48,6 +50,20 @@ impl Team {
             team.add_player_in_batting_order(&player);
         }
 
+        team
+    }
+
+    pub fn create_full_sample_team(location: Location) -> Self {
+        println!("Team creation started...");
+        println!("Enter team name:");
+        let name: String = text_io::read!();
+        let mut team = Team::new(name, location);
+
+        for _ in 1..=9 {
+            team.add_player_in_batting_order(&Player::get_sample_player());
+        }
+
+        println!("{team:?} created");
         team
     }
 }

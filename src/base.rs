@@ -1,6 +1,6 @@
 use crate::player::Player;
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Base {
     occupied: Option<Player>,
 }

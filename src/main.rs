@@ -10,9 +10,9 @@ mod score;
 mod team;
 
 fn main() {
-    let home_team = Team::create_team_with_players(team::Location::Home);
+    let home_team = Team::create_full_sample_team(team::Location::Home);
 
-    let away_team = Team::create_team_with_players(team::Location::Away);
+    let away_team = Team::create_full_sample_team(team::Location::Away);
 
     let mut game = Gamestate::new();
     game.set_home_team(home_team);

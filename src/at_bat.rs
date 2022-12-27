@@ -13,7 +13,7 @@ pub enum Outcome {
     FlyOut,
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct AtBat {
     player: Player,
     strikes: u8,

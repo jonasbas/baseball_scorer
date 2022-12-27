@@ -45,8 +45,10 @@ impl Gamestate {
 
         while !self.is_over(half_type) {
             let mut half = InningHalf::new(self.current_inning, half_type);
+            println!("{half:?}");
 
             while !half.is_over() {
+                println!("Outs: {}", half.outs);
                 let mut current_player =
                     &self.away.as_ref().unwrap().batting_order[self.away_order];
 

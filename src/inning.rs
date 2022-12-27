@@ -1,5 +1,6 @@
 use crate::{at_bat::AtBat, base::Base, player::Player, score::Score};
 
+#[derive(Debug)]
 pub struct Inning {
     top: Option<InningHalf>,
     bot: Option<InningHalf>,
@@ -24,13 +25,13 @@ impl Inning {
     }
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Half {
     Top,
     Bottom,
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct InningHalf {
     number: u8,
     half: Half,
