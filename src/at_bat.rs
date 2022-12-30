@@ -13,6 +13,15 @@ pub enum Outcome {
     FlyOut,
 }
 
+impl Outcome {
+    pub fn is_a_hit(&self) -> bool {
+        match self {
+            Single | Double | Triple => true,
+            _ => false,
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct AtBat {
     player: Player,

@@ -64,9 +64,10 @@ impl Gamestate {
 
                 // if current_at_bat.outcome == Some(Outcome::GroundOut) {}
 
-                if current_at_bat.outcome.is_some() {
-                    half.outs += 1;
-                }
+                // if current_at_bat.outcome.is_some() {
+                //     half.outs += 1;
+                // }
+                half.at_bats.push(current_at_bat);
             }
 
             //Ende der Inning Hälfte
@@ -84,7 +85,7 @@ impl Gamestate {
     }
 
     fn is_over(&self, half: Half) -> bool {
-        if self.current_inning == 9 && half == Half::Top {
+        if self.current_inning >= 9 && half == Half::Bottom && !self.score.is_tied() {
             println!("Game over!");
             true
         } else {

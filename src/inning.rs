@@ -35,8 +35,10 @@ pub enum Half {
 pub struct InningHalf {
     number: u8,
     half: Half,
-    at_bats: Vec<AtBat>,
-    bases: Vec<Base>,
+    pub at_bats: Vec<AtBat>,
+    first_base: Base,
+    second_base: Base,
+    third_base: Base,
     pub outs: u8,
 }
 
@@ -46,7 +48,9 @@ impl InningHalf {
             number,
             half,
             at_bats: Vec::new(),
-            bases: vec![Base::new(), Base::new(), Base::new()],
+            first_base: Base::new(),
+            second_base: Base::new(),
+            third_base: Base::new(),
             outs: 0,
         }
     }
@@ -55,13 +59,27 @@ impl InningHalf {
         self.outs >= 3
     }
 
-    pub fn start_new_at_bat(&mut self, player: &Player, score: &Score) -> Result<(), &str> {
-        if self.is_over() {
-            return Err("inning half is over");
+    pub fn move_bases(&mut self) {
+        //TODO: Actaully move the players
+        if !self.third_base.is_empty() {
+            println!(
+                "Player {} is on third base. What happens?",
+                self.third_base.get_player()
+            );
         }
 
-        let current_at_bat = AtBat::new(player);
+        if !self.second_base.is_empty() {
+            println!(
+                "Player {} is on second base. What happens?",
+                self.second_base.get_player()
+            );
+        }
 
-        Ok(())
+        if !self.first_base.is_empty() {
+            println!(
+                "Player {} is on first base. What happens?",
+                self.first_base.get_player()
+            );
+        }
     }
 }

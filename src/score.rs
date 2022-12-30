@@ -18,4 +18,8 @@ impl Score {
     pub fn score_run_away_team(&mut self) {
         self.runs_away_team += 1;
     }
+
+    pub fn is_tied(&self) -> bool {
+        self.runs_home_team == self.runs_away_team
+    }
 }

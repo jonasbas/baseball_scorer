@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 #[derive(Debug, PartialEq, Clone)]
 pub struct Player {
     first_name: String,
@@ -34,6 +36,12 @@ impl Player {
             String::from("Werner"),
             crate::player::Position::Catcher,
         )
+    }
+}
+
+impl Display for Player {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} {}", self.first_name, self.last_name)
     }
 }
 

@@ -16,6 +16,14 @@ impl Base {
         }
         self.occupied = Some(player);
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.occupied.is_none()
+    }
+
+    pub fn get_player(&self) -> &Player {
+        self.occupied.as_ref().expect("Base is empty!")
+    }
 }
 
 #[cfg(test)]
