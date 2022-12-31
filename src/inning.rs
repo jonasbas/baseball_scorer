@@ -59,13 +59,14 @@ impl InningHalf {
         self.outs >= 3
     }
 
-    pub fn move_bases(&mut self) {
-        //TODO: Actaully move the players
+    pub fn move_bases(&mut self) -> usize {
+        let mut scoring_runs = 0;
         if !self.third_base.is_empty() {
             println!(
                 "Player {} is on third base. What happens?",
                 self.third_base.get_player()
             );
+            scoring_runs += self.move_third_base();
         }
 
         if !self.second_base.is_empty() {
@@ -73,6 +74,7 @@ impl InningHalf {
                 "Player {} is on second base. What happens?",
                 self.second_base.get_player()
             );
+            scoring_runs += self.move_second_base();
         }
 
         if !self.first_base.is_empty() {
@@ -80,6 +82,88 @@ impl InningHalf {
                 "Player {} is on first base. What happens?",
                 self.first_base.get_player()
             );
+            scoring_runs += self.move_first_base();
         }
+
+        scoring_runs
+    }
+
+    fn move_third_base(&mut self) -> usize {
+        let input: String = text_io::read!();
+        let mut runs_scored = 0;
+
+        match input.to_lowercase().as_str() {
+            "home" | "run" | "scored" => {
+                runs_scored += 1;
+                self.third_base = Base::new();
+            }
+            "thrown" | "out" | "o" => {
+                self.third_base = Base::new();
+            }
+            "nothing" | "stay" => (),
+            _ => (), //TODO: repeat match
+        }
+
+        runs_scored
+    }
+
+    fn move_second_base(&mut self) -> usize {
+        let input: String = text_io::read!();
+        let mut runs_scored = 0;
+
+        match input.to_lowercase().as_str() {
+            "home" | "run" | "scored" => {
+                if self.third_base.is_empty() {
+                    runs_scored += 1;
+                    self.second_base = Base::new();
+                }
+            }
+            "third" | "3" => {
+                if self.third_base.is_empty() {
+                    self.third_base = self.second_base.clone();
+                    self.second_base = Base::new();
+                }
+            }
+            "thrown" | "out" | "o" => {
+                self.second_base = Base::new();
+            }
+            "nothing" | "stay" => (),
+            _ => (), //TODO: repeat match
+        }
+
+        runs_scored
+    }
+
+    fn move_first_base(&mut self) -> usize {
+        let input: String = text_io::read!();
+        let mut runs_scored = 0;
+
+        match input.to_lowercase().as_str() {
+            "home" | "run" | "scored" => {
+                if self.third_base.is_empty() && self.second_base.is_empty() {
+                    runs_scored += 1;
+                    self.second_base = Base::new();
+                }
+            }
+            "third" | "3" => {
+                if self.third_base.is_empty() && self.second_base.is_empty() {
+                    self.third_base = self.second_base.clone();
+                    self.second_base = Base::new();
+                }
+            }
+            "second" | "2" => {
+                if self.second_base.is_empty() {
+                    self.second_base = self.first_base.clone();
+                    self.first_base = Base::new();
+                }
+            }
+            "thrown" | "out" | "o" => {
+                self.second_base = Base::new();
+            }
+            "nothing" | "stay" => (),
+            _ => (), //TODO: repeat match
+        }
+
+        runs_scored
     }
 }

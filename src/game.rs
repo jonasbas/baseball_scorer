@@ -62,11 +62,6 @@ impl Gamestate {
                 let mut current_at_bat = AtBat::new(current_player);
                 let result = current_at_bat.play();
 
-                // if current_at_bat.outcome == Some(Outcome::GroundOut) {}
-
-                // if current_at_bat.outcome.is_some() {
-                //     half.outs += 1;
-                // }
                 half.at_bats.push(current_at_bat);
             }
 
