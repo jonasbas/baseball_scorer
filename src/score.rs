@@ -11,11 +11,11 @@ impl Score {
         }
     }
 
-    pub fn score_run_home_team(&mut self) {
+    pub fn score_runs_home_team(&mut self, runs: usize) {
         self.runs_home_team += 1;
     }
 
-    pub fn score_run_away_team(&mut self) {
+    pub fn score_runs_away_team(&mut self, runs: usize) {
         self.runs_away_team += 1;
     }
 

@@ -10,11 +10,11 @@ impl Base {
         Base { occupied: None }
     }
 
-    pub fn reach_base(&mut self, player: Player) {
+    pub fn reach_base(&mut self, player: &Player) {
         if self.occupied != None {
             panic!("base is not empty"); //TODO: no panic please
         }
-        self.occupied = Some(player);
+        self.occupied = Some(player.clone());
     }
 
     pub fn is_empty(&self) -> bool {

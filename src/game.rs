@@ -49,20 +49,38 @@ impl Gamestate {
 
             while !half.is_over() {
                 println!("Outs: {}", half.outs);
-                let mut current_player =
-                    &self.away.as_ref().unwrap().batting_order[self.away_order];
 
-                if half_type == Half::Bottom {
-                    current_player = &self.home.as_ref().unwrap().batting_order[self.home_order];
-                    self.home_order = (self.home_order + 1) % 9;
+                let current_player = if half_type == Half::Top {
+                    &self.away.as_ref().unwrap().batting_order[self.away_order]
                 } else {
-                    self.away_order = (self.away_order + 1) % 9;
+                    &self.home.as_ref().unwrap().batting_order[self.home_order]
+                };
+
+                let mut scored_runs = 0;
+                let mut current_at_bat = AtBat::new(current_player);
+
+                while !current_at_bat.is_over() {
+                    current_at_bat.play();
+                    scored_runs = match current_at_bat.outcome {
+                        Outcome::TBD => 0,
+                        Outcome::Single => half.resolve_single(current_player),
+                        Outcome::Double => half.resolve_double(current_player),
+                        Outcome::Triple => half.resolve_triple(current_player),
+                        Outcome::Walk => 0,
+                        Outcome::FlyOut => 0,
+                        Outcome::HomeRun => 0,
+                        Outcome::StrikeOut => 0,
+                        Outcome::GroundOut => 0,
+                    };
                 }
 
-                let mut current_at_bat = AtBat::new(current_player);
-                let result = current_at_bat.play();
-
-                half.at_bats.push(current_at_bat);
+                if half_type == Half::Top {
+                    self.score.score_runs_away_team(scored_runs);
+                    self.away_order = (self.away_order + 1) % 9;
+                } else {
+                    self.score.score_runs_home_team(scored_runs);
+                    self.home_order = (self.home_order + 1) % 9;
+                }
             }
 
             //Ende der Inning Hälfte

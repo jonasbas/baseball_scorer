@@ -1,8 +1,9 @@
 use crate::at_bat::Outcome::*;
 use crate::player::Player;
 
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Outcome {
+    TBD,
     StrikeOut,
     Single,
     Double,
@@ -13,21 +14,12 @@ pub enum Outcome {
     FlyOut,
 }
 
-impl Outcome {
-    pub fn is_a_hit(&self) -> bool {
-        match self {
-            Single | Double | Triple => true,
-            _ => false,
-        }
-    }
-}
-
 #[derive(Debug, Clone)]
 pub struct AtBat {
     player: Player,
     strikes: u8,
     balls: u8,
-    pub outcome: Option<Outcome>,
+    pub outcome: Outcome,
 }
 
 impl AtBat {
@@ -36,34 +28,31 @@ impl AtBat {
             player: player.clone(),
             strikes: 0,
             balls: 0,
-            outcome: None,
+            outcome: TBD,
         }
     }
 
-    pub fn score_strike(&mut self) {
+    fn score_strike(&mut self) {
         self.strikes += 1;
 
         if self.strikes >= 3 {
-            self.outcome = Some(StrikeOut);
+            self.outcome = StrikeOut;
         }
     }
 
-    pub fn score_ball(&mut self) {
+    fn score_ball(&mut self) {
         self.balls += 1;
 
         if self.balls >= 4 {
-            self.outcome = Some(Walk);
+            self.outcome = Walk;
         }
     }
 
     pub fn is_over(&self) -> bool {
-        if self.outcome.is_some() {
-            return true;
-        }
-        false
+        self.outcome != TBD
     }
 
-    pub fn play(&mut self) -> Result<(), &str> {
+    pub fn play(&mut self) {
         println!("Current Player: {:?}", self.player);
 
         while !self.is_over() {
@@ -74,20 +63,18 @@ impl AtBat {
             let input: String = text_io::read!();
             self.match_input(input)
         }
-
-        Ok(())
     }
 
     fn match_input(&mut self, input: String) {
         match input.trim().to_lowercase().as_str() {
             "b" => self.score_ball(),
             "s" | "k" => self.score_strike(),
-            "single" | "1" | "h1" | "hs" => self.outcome = Some(Single),
-            "double" | "2" | "h2" | "hd" | "d" => self.outcome = Some(Double),
-            "triple" | "3" | "h3" | "ht" | "t" => self.outcome = Some(Triple),
-            "home" | "homerun" | "4" | "h4" | "hr" => self.outcome = Some(HomeRun),
-            "go" | "g" => self.outcome = Some(GroundOut),
-            "fo" | "f" => self.outcome = Some(FlyOut),
+            "single" | "1" | "h1" | "hs" => self.outcome = Single,
+            "double" | "2" | "h2" | "hd" | "d" => self.outcome = Double,
+            "triple" | "3" | "h3" | "ht" | "t" => self.outcome = Triple,
+            "home" | "homerun" | "4" | "h4" | "hr" => self.outcome = HomeRun,
+            "go" | "g" => self.outcome = GroundOut,
+            "fo" | "f" => self.outcome = FlyOut,
             _ => (),
         };
     }
@@ -104,7 +91,7 @@ mod test {
 
         assert_eq!(at_bat.balls, 0);
         assert_eq!(at_bat.strikes, 0);
-        assert_eq!(at_bat.outcome, None);
+        assert_eq!(at_bat.outcome, TBD);
     }
 
     #[test]
@@ -120,7 +107,7 @@ mod test {
         at_bat.score_strike();
 
         assert_eq!(at_bat.strikes, 3);
-        assert_eq!(at_bat.outcome.unwrap(), StrikeOut);
+        assert_eq!(at_bat.outcome, StrikeOut);
     }
 
     #[test]
@@ -136,6 +123,6 @@ mod test {
         assert_eq!(at_bat.balls, 3);
         at_bat.score_ball();
         assert_eq!(at_bat.balls, 4);
-        assert_eq!(at_bat.outcome.unwrap(), Walk)
+        assert_eq!(at_bat.outcome, Walk)
     }
 }
