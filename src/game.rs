@@ -66,7 +66,7 @@ impl Gamestate {
                         Outcome::Single => half.resolve_single(current_player),
                         Outcome::Double => half.resolve_double(current_player),
                         Outcome::Triple => half.resolve_triple(current_player),
-                        Outcome::Walk => 0,
+                        Outcome::Walk => half.resolve_walk(current_player),
                         Outcome::FlyOut => 0,
                         Outcome::HomeRun => 0,
                         Outcome::StrikeOut => 0,

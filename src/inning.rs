@@ -104,7 +104,7 @@ impl InningHalf {
             //TODO: REDO
         } else {
             self.first_base = Base::new();
-            self.first_base.reach_base(player);
+            self.first_base.set_player(player);
         }
 
         scoring_runs
@@ -125,7 +125,7 @@ impl InningHalf {
             //TODO: REDO
         } else {
             self.first_base = Base::new();
-            self.first_base.reach_base(player);
+            self.first_base.set_player(player);
         }
 
         scoring_runs
@@ -151,7 +151,35 @@ impl InningHalf {
             //TODO: REDO
         } else {
             self.first_base = Base::new();
-            self.first_base.reach_base(player);
+            self.first_base.set_player(player);
+        }
+
+        scoring_runs
+    }
+
+    pub fn resolve_walk(&mut self, player: &Player) -> usize {
+        let mut scoring_runs = 0;
+        if self.first_base.is_empty() {
+            self.first_base.set_player(player);
+        } else if self.second_base.is_empty() {
+            self.second_base.set_player(self.first_base.get_player());
+
+            self.first_base = Base::new();
+            self.first_base.set_player(player);
+        } else if self.third_base.is_empty() {
+            self.third_base.set_player(self.second_base.get_player());
+            self.second_base.set_player(self.first_base.get_player());
+
+            self.first_base = Base::new();
+            self.first_base.set_player(player);
+        } else {
+            self.third_base.set_player(self.second_base.get_player());
+            self.second_base.set_player(self.first_base.get_player());
+
+            self.first_base = Base::new();
+            self.first_base.set_player(player);
+
+            scoring_runs += 1;
         }
 
         scoring_runs

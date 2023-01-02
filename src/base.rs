@@ -10,10 +10,7 @@ impl Base {
         Base { occupied: None }
     }
 
-    pub fn reach_base(&mut self, player: &Player) {
-        if self.occupied != None {
-            panic!("base is not empty"); //TODO: no panic please
-        }
+    pub fn set_player(&mut self, player: &Player) {
         self.occupied = Some(player.clone());
     }
 
@@ -35,7 +32,4 @@ mod tests {
         let new_base = Base::new();
         assert_eq!(new_base.occupied, None, "New Base is not empty!");
     }
-
-    #[test]
-    fn reach_base() {}
 }
